@@ -9,14 +9,13 @@ import java.util.Map;
 import java.util.concurrent.*;
 
 @Component
-@Scope("singleton")
 public class TaskHandler {
-    private final ExecutorService executorService = Executors.newFixedThreadPool(5);
+    private final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private final Map<Integer, Task> tasks = new ConcurrentHashMap<>();
 
 
     public String submitTask(CounterTask task) throws ExecutionException, InterruptedException {
-        int taskId = tasks.size() + 1;
+        int taskId = tasks.size() + 1; //UUID
         tasks.put(taskId, task);
         Future<String> future = executorService.submit(task);
         return future.get();
